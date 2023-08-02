@@ -64,6 +64,9 @@ const boardModule = (() => {
       ) {
         winner = 'current'
         console.log({ winner })
+        cells[combination[0]].classList.add('winner')
+        cells[combination[1]].classList.add('winner')
+        cells[combination[2]].classList.add('winner')
       }
     })
     return winner || (boardArray.includes('') ? null : 'Tie')

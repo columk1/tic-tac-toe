@@ -81,8 +81,9 @@ form h5 {
   background-image: url(./assets/icon-o.svg);
 }
 
-.won {
+.cell.winner {
   background-size: 70%;
+  background-color: #5f22b9;
 }
 
 .game-container {
@@ -101,7 +102,6 @@ form h5 {
 .game-status {
   width: 100%;
   background-color: transparent;
-  opacity: 0;
 }
 
 .centered {
