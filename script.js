@@ -86,6 +86,7 @@ const gamePlay = (() => {
 
   const switchTurn = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne
+    setActiveStates()
   }
 
   const setActiveStates = () => {
@@ -105,7 +106,6 @@ const gamePlay = (() => {
 
     board.gameBoard.addEventListener('click', (e) => {
       e.preventDefault()
-      setActiveStates()
       const play = currentPlayer.playTurn(board, e.target)
       if (play !== null) {
         board.boardArray[play] = `${currentPlayer.mark}`
