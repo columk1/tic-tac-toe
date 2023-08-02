@@ -112,11 +112,14 @@ const gamePlay = (() => {
           gameStatus.textContent = 'Tie'
         } else if (winStatus === null) {
           switchTurn()
+          fadeOut();
+          setTimeout(fadeIn, 100);
           gameStatus.textContent = `${currentPlayer.name}'s Turn`
         } else {
           gameStatus.textContent = `Winner is ${currentPlayer.name}`
-          board.reset()
-          board.render()
+          board.gameBoard.classList.add('game-over')
+          // reset()
+          // render()
         }
       }
     })
@@ -131,12 +134,23 @@ const gamePlay = (() => {
     }
   }
 
+  const fadeIn = () => {
+    document.querySelector('.game-status').classList.remove('m-fadeOut')
+    document.querySelector('.game-status').classList.add('m-fadeIn')
+  }
+
+  const fadeOut = () => {
+    document.querySelector('.game-status').classList.remove('m-fadeIn')
+    document.querySelector('.game-status').classList.add('m-fadeOut')
+  }
+
   form.addEventListener('submit', (e) => {
     e.preventDefault()
     if (playerOneName.value !== '' && playerTwoName.value !== '') {
       gameInit()
       form.classList.add('hidden')
       document.querySelector('.game-container').classList.remove('hidden')
+      setTimeout(fadeIn, 300);
     } else {
       window.location.reload()
     }

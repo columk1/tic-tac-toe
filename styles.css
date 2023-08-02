@@ -81,6 +81,10 @@ form h5 {
   background-image: url(./assets/icon-o.svg);
 }
 
+.won {
+  background-size: 70%;
+}
+
 .game-container {
   display: grid;
   place-items: center;
@@ -88,10 +92,16 @@ form h5 {
 }
 
 .player-info,
-.game-status {
+.status-wrapper {
   width: calc(100% - 1rem);
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
+}
+
+.game-status {
+  width: 100%;
+  background-color: transparent;
+  opacity: 0;
 }
 
 .centered {
@@ -101,4 +111,19 @@ form h5 {
 
 .hidden {
   display: none;
+}
+
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 1.5s ease;
+}
+
+.game-over {
+  pointer-events: none;
 }
