@@ -75,6 +75,10 @@ const boardModule = (() => {
   return { render, gameBoard, cells, boardArray, checkWin, reset }
 })()
 
+//
+// Two Player Game
+//
+
 const gamePlay = (() => {
   const playerOneName = document.querySelector('#player1')
   const playerTwoName = document.querySelector('#player2')
@@ -101,7 +105,7 @@ const gamePlay = (() => {
     if (currentPlayer.name !== '') {
       gameStatus.textContent = `${currentPlayer.name}'s Turn`
     } else {
-      gameStatus.textContent = 'Board: '
+      gameStatus.textContent = ''
     }
 
     board.gameBoard.addEventListener('click', (e) => {
@@ -119,7 +123,7 @@ const gamePlay = (() => {
           setTimeout(fadeIn, 100);
           gameStatus.textContent = `${currentPlayer.name}'s Turn`
         } else {
-          gameStatus.textContent = `Winner is ${currentPlayer.name}`
+          gameStatus.textContent = `${currentPlayer.name} Wins!`
           board.gameBoard.classList.add('game-over')
           // reset()
           // render()
@@ -129,6 +133,7 @@ const gamePlay = (() => {
   }
 
   const gameInit = () => {
+    form.classList.remove('hidden')
     if (playerOneName.value !== '' && playerTwoName.value !== '') {
       playerOne = playerFactory(playerOneName.value, 'X')
       playerTwo = playerFactory(playerTwoName.value, 'O')
@@ -155,7 +160,7 @@ const gamePlay = (() => {
       document.querySelector('.game-container').classList.remove('hidden')
       setTimeout(fadeIn, 300);
     } else {
-      window.location.reload()
+      // window.location.reload()
     }
   })
 
@@ -168,4 +173,122 @@ const gamePlay = (() => {
   return { gameInit }
 })()
 
-gamePlay.gameInit()
+//
+// Single Player Game
+//
+
+const gamePlayAI = (() => {
+  const resetBtn = document.querySelector('#reset')
+  let currentPlayer
+  let player
+  let computer
+
+  const switchTurn = () => {
+    currentPlayer = currentPlayer === player ? computer : player
+    // setActiveStates()
+  }
+
+  // const setActiveStates = () => {
+  //   document.querySelectorAll('[data-turn]').forEach((e, index) => {
+  //     e.dataset.turn = currentPlayer.mark
+  //   })
+  // }
+
+  const gameRound = () => {
+    const board = boardModule
+    const gameStatus = document.querySelector('.game-status')
+    if (currentPlayer.name !== '') {
+      gameStatus.textContent = `${currentPlayer.name}'s Turn`
+    } else {
+      gameStatus.textContent = ''
+    }
+
+    const nextTurn = () => {
+      let available = []
+      board.boardArray.filter((cell, index) => {
+        if (cell === '') {
+          available.push(index)
+        }
+      })
+      let move = available[0]
+      board.boardArray[move] = 'O'
+      board.render()
+      const winStatus = board.checkWin()
+      if (winStatus === 'Tie') {
+        gameStatus.textContent = 'Tie'
+      }
+      switchTurn()
+    }
+
+    board.gameBoard.addEventListener('click', (e) => {
+      e.preventDefault()
+      const play = currentPlayer.playTurn(board, e.target)
+      if (play !== null) {
+        board.boardArray[play] = `${currentPlayer.mark}`
+        board.render()
+        const winStatus = board.checkWin()
+        if (winStatus === 'Tie') {
+          gameStatus.textContent = 'Tie'
+        } else if (winStatus === null) {
+          nextTurn()
+          switchTurn()
+          fadeOut();
+          setTimeout(fadeIn, 100);
+          gameStatus.textContent = `${currentPlayer.name}'s Turn`
+        } else {
+          gameStatus.textContent = `${currentPlayer.name} Wins!`
+          board.gameBoard.classList.add('game-over')
+          // reset()
+          // render()
+        }
+      }
+    })
+  }
+
+  const gameInit = () => {
+    player = playerFactory('Player', 'X')
+    computer = playerFactory('Computer', 'O')
+    currentPlayer = player
+    document.querySelector('.game-container').classList.remove('hidden')
+    gameRound()
+  }
+
+  const fadeIn = () => {
+    document.querySelector('.game-status').classList.remove('m-fadeOut')
+    document.querySelector('.game-status').classList.add('m-fadeIn')
+  }
+
+  const fadeOut = () => {
+    document.querySelector('.game-status').classList.remove('m-fadeIn')
+    document.querySelector('.game-status').classList.add('m-fadeOut')
+  }
+
+  resetBtn.addEventListener('click', () => {
+    document.querySelector('.game-status').textContent = 'Board: '
+    document.querySelector('#player1').value = ''
+    document.querySelector('#player2').value = ''
+    window.location.reload()
+  })
+  return { gameInit }
+})()
+
+const start = () => {
+  const btnGroup = document.getElementById('btn-group')
+  const onePlayerBtn = document.querySelector('.one-player-btn')
+  const twoPlayerBtn = document.querySelector('.two-player-btn')
+
+  onePlayerBtn.addEventListener('click', () => {
+    btnGroup.classList.add('hidden')
+    gamePlayAI.gameInit()
+  })
+
+  twoPlayerBtn.addEventListener('click', () => {
+    btnGroup.classList.add('hidden')
+    gamePlay.gameInit()
+  })
+}
+
+start()
+
+
+// gamePlay.gameInit()
