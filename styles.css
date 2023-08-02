@@ -1,0 +1,104 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto Mono', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol';
+  background-color: #9fe9be;
+}
+
+header {
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem;
+}
+
+header h1 {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 400;
+  font-size: 3rem;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+
+form h5 {
+  margin-bottom: 1.5rem;
+}
+
+.board {
+  width: 50vh;
+  height: 50vh;
+  padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.5rem;
+  border-radius: 7px;
+  /* background-color: #2c1a4d; */
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  font-size: 8vh;
+  background-color: #30115e;
+  border-radius: 5px;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cell {
+  transition: all 0.3s ease;
+}
+
+.cell[data-turn='X']:hover {
+  background-image: url(./assets/icon-x-outline.svg);
+}
+
+.cell[data-turn='O']:hover {
+  background-image: url(./assets/icon-o-outline.svg);
+}
+
+.cell[data-state='X'] {
+  background-image: url(./assets/icon-x.svg);
+}
+
+.cell[data-state='O'] {
+  background-image: url(./assets/icon-o.svg);
+}
+
+.game-container {
+  display: grid;
+  place-items: center;
+  padding: 2rem 4rem;
+}
+
+.player-info,
+.game-status {
+  width: calc(100% - 1rem);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.centered {
+  display: grid;
+  place-items: center;
+}
+
+.hidden {
+  display: none;
+}

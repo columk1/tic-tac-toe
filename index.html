@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1 class="mt-4">Tic Tac Toe</h1>
+    </header>
+    <main>
+      <div class="container">
+        <form class="player-info mb-4">
+          <h5 class="text-center">
+            Enter players' names and click play to start the game!
+          </h5>
+          <div class="form-group">
+            <label for="player1">Player 1 (X)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="player1"
+              placeholder="Player 1 Name"
+              value="Jim"
+            />
+          </div>
+          <div class="form-group">
+            <label for="player2">Player 2 (O)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="player2"
+              placeholder="Player 2 Name"
+              value="Jack"
+            />
+          </div>
+          <div class="form-group centered mt-4">
+            <button type="submit" class="btn btn-secondary mx-auto">
+              Play
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="hidden game-container">
+        <div class="alert-primary game-status text-center">
+          <h4>Board:</h4>
+        </div>
+        <div class="board">
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+          <div class="cell" data-turn="X" data-state=""></div>
+        </div>
+        <button class="btn btn-secondary mt-4 text-center" id="reset">
+          Restart
+        </button>
+      </div>
+    </main>
+    <footer></footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
