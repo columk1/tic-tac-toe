@@ -127,3 +127,14 @@ form h5 {
 .game-over {
   pointer-events: none;
 }
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .game-container {
+    padding: 0;
+  }
+  .board {
+    width: 70vw;
+    height: 70vw;
+  }
+}
