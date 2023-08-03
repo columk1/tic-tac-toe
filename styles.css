@@ -89,8 +89,13 @@ form h5 {
 
 .cell.winner {
   background-size: 70%;
-  background-color: #5f22b9;
+  background-color: #6f42c1;
 }
+
+/* .cell.winner[data-state='O'] {
+  background-image: url(./assets/icon-o-alt.svg);
+  background-color: #ffc008;
+} */
 
 .game-container {
   display: grid;
