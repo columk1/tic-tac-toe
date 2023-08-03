@@ -1,16 +1,3 @@
-// let grid = [];
-// for (let i = 0; i < 9; i++) {
-//     grid.push('')
-// }
-
-// let board = document.querySelector('.game-board')
-
-// grid.forEach((elem, index) => {
-//     const cell = document.createElement('div')
-//     cell.className  = 'cell'
-//     board.appendChild(cell)
-// })
-
 const playerFactory = (name, mark) => {
   const playTurn = (board, cell) => {
     const index = board.cells.findIndex((position) => position === cell)
@@ -25,6 +12,16 @@ const playerFactory = (name, mark) => {
 
 const boardModule = (() => {
   let boardArray = ['', '', '', '', '', '', '', '', '']
+  const winPatterns = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ]
   const gameBoard = document.querySelector('.board')
   const cells = Array.from(document.querySelectorAll('.cell'))
   let winner = null
@@ -45,24 +42,17 @@ const boardModule = (() => {
   }
 
   const checkWin = () => {
-    const winArrays = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ]
+    let winner = null
 
-    winArrays.forEach((combination) => {
+    console.log("Check Win: " + boardArray)
+
+    winPatterns.forEach((combination) => {
       if (
         boardArray[combination[0]] &&
         boardArray[combination[0]] === boardArray[combination[1]] &&
         boardArray[combination[0]] === boardArray[combination[2]]
       ) {
-        winner = 'current'
+        winner = boardArray[combination[0]]
         console.log({ winner })
         cells[combination[0]].classList.add('winner')
         cells[combination[1]].classList.add('winner')
@@ -72,7 +62,19 @@ const boardModule = (() => {
     return winner || (boardArray.includes('') ? null : 'Tie')
   }
 
-  return { render, gameBoard, cells, boardArray, checkWin, reset }
+  const hasWon = (mark) => {
+    return winPatterns.some((pattern) => {
+      return pattern.every((i) => {
+        return boardArray[i] === mark
+      })
+    })
+  }
+
+  const isTie = () => {
+    return !boardArray.includes('')
+  }
+
+  return { render, gameBoard, cells, boardArray, checkWin, hasWon, isTie, reset }
 })()
 
 //
@@ -83,6 +85,7 @@ const gamePlay = (() => {
   const playerOneName = document.querySelector('#player1')
   const playerTwoName = document.querySelector('#player2')
   const form = document.querySelector('.player-info')
+  const gameStatus = document.querySelector('.game-status')
   const resetBtn = document.querySelector('#reset')
   let currentPlayer
   let playerOne
@@ -101,7 +104,6 @@ const gamePlay = (() => {
 
   const gameRound = () => {
     const board = boardModule
-    const gameStatus = document.querySelector('.game-status')
     if (currentPlayer.name !== '') {
       gameStatus.textContent = `${currentPlayer.name}'s Turn`
     } else {
@@ -159,8 +161,6 @@ const gamePlay = (() => {
       form.classList.add('hidden')
       document.querySelector('.game-container').classList.remove('hidden')
       setTimeout(fadeIn, 300);
-    } else {
-      // window.location.reload()
     }
   })
 
@@ -203,22 +203,95 @@ const gamePlayAI = (() => {
       gameStatus.textContent = ''
     }
 
+    // const nextTurn = () => {
+    //   let available = []
+    //   board.boardArray.filter((cell, index) => {
+    //     if (cell === '') {
+    //       available.push(index)
+    //     }
+    //   })
+    //   let move = available[0]
+    //   board.boardArray[move] = 'O'
+    //   board.render()
+    //   switchTurn()
+    // }
+
     const nextTurn = () => {
-      let available = []
-      board.boardArray.filter((cell, index) => {
-        if (cell === '') {
-          available.push(index)
-        }
-      })
-      let move = available[0]
+      let move = minimax(board, true).index
       board.boardArray[move] = 'O'
       board.render()
-      const winStatus = board.checkWin()
-      if (winStatus === 'Tie') {
-        gameStatus.textContent = 'Tie'
-      }
-      switchTurn()
+      updateStatus()
     }
+
+    const minimax = (board, isMaximizing) => {
+      if (board.hasWon('X')) {
+        return { score: -10 }
+      } else if (board.hasWon('O')) {
+        return { score: 10 }
+      } else if (board.isTie()) {
+        return { score: 0 }
+      }
+
+      let cells = []
+
+      board.boardArray.forEach((cell, index) => {
+        if (cell === '') {
+          cells.push(index)
+        }
+      })
+
+      let moves = []
+      cells.forEach((index) => {
+        let move = {}
+        move.index = index
+
+        if (isMaximizing) {
+          board.boardArray[index] = 'O'
+          let g = minimax(board, false)
+          move.score = g.score
+        } else {
+          board.boardArray[index] = 'X'
+          let g = minimax(board, true)
+          move.score = g.score
+        }
+        board.boardArray[index] = ''
+        moves.push(move)
+      })
+
+      let bestMove
+
+      if (isMaximizing) {
+        var bestScore = -Infinity;
+        for (var i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        var bestScore = Infinity;
+        for (var i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+    }
+    return moves[bestMove];
+  }
+
+  const updateStatus = () => {
+    const winStatus = board.checkWin()
+    if (winStatus === 'Tie') {
+      gameStatus.textContent = 'Tie'
+    } else if (winStatus === null) {
+      switchTurn()
+      gameStatus.textContent = `Nice Move!`
+    } else {
+      gameStatus.textContent = `${currentPlayer.name} Wins!`
+      board.gameBoard.classList.add('game-over')
+    }
+  }
 
     board.gameBoard.addEventListener('click', (e) => {
       e.preventDefault()
@@ -226,22 +299,11 @@ const gamePlayAI = (() => {
       if (play !== null) {
         board.boardArray[play] = `${currentPlayer.mark}`
         board.render()
-        const winStatus = board.checkWin()
-        if (winStatus === 'Tie') {
-          gameStatus.textContent = 'Tie'
-        } else if (winStatus === null) {
+          updateStatus()
           nextTurn()
-          switchTurn()
-          fadeOut();
-          setTimeout(fadeIn, 100);
-          gameStatus.textContent = `${currentPlayer.name}'s Turn`
-        } else {
-          gameStatus.textContent = `${currentPlayer.name} Wins!`
-          board.gameBoard.classList.add('game-over')
           // reset()
           // render()
         }
-      }
     })
   }
 
@@ -289,6 +351,3 @@ const start = () => {
 }
 
 start()
-
-
-// gamePlay.gameInit()
