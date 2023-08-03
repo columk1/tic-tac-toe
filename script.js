@@ -247,12 +247,10 @@ const gamePlayAI = (() => {
 
         if (isMaximizing) {
           board.boardArray[index] = 'O'
-          let g = minimax(board, false)
-          move.score = g.score
+          move.score = minimax(board, false).score
         } else {
           board.boardArray[index] = 'X'
-          let g = minimax(board, true)
-          move.score = g.score
+          move.score = minimax(board, true).score
         }
         board.boardArray[index] = ''
         moves.push(move)
